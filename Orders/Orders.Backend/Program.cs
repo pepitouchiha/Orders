@@ -10,6 +10,12 @@ builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer("name=LocalConnec
 
 var app = builder.Build();
 
+app.UseCors(x => x
+.AllowAnyMethod()
+.AllowAnyHeader()
+.SetIsOriginAllowed(origin => true)
+.AllowCredentials());		//bajar la seguridad para poder consumir desde el front
+
 if (app.Environment.IsDevelopment())
 {
 	app.UseSwagger();
