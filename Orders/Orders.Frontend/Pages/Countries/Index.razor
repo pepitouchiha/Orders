@@ -1,0 +1,49 @@
+﻿@page "/countries"
+@using Orders.Shared.Entities
+@inject IRepository repository
+
+<h3>Countries</h3>
+
+@if (Countries == null)
+{
+    <p>No hay datos disponibles para mostrar :(</p>
+}
+else
+{
+    <div class="container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Country</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var country in Countries!)
+                {
+                    <tr>
+                        <th>@country.Id</th>
+                        <th>@country.Name</th>
+                        <th>
+                            <a class="btn btn-warning">Edit</a>
+                            <button class="btn btn-danger">Delete</button>
+                        </th>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+    //el interrogación significa que puede ser nullable
+    public List<Country>? Countries { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var responseHttp = await repository.GetAsync<List<Country>>("api/countries");
+        Countries = responseHttp.Response;
+    }
+}
